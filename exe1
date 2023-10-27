@@ -1,0 +1,72 @@
+using System;
+using System.Threading;
+
+class Flower
+{
+    public static int Petals { get; set; } = 7;
+
+    public static event EventHandler FlowerEvent;
+
+    public static void GenerateEvent()
+    {
+        if (Petals > 1)
+        {
+            Petals--;
+            FlowerEvent?.Invoke(null, EventArgs.Empty);
+        }
+        else
+        {
+            Petals--;
+            FlowerEvent?.Invoke(null, EventArgs.Empty);
+        }
+    }
+}
+
+class Girl
+{
+    private string[] wishes = { "Желание 1", "Желание 2", "Желание 3", "Желание 4", "Желание 5", "Желание 6" };
+
+    public void HandleEvent(object sender, EventArgs e)
+    {
+        if (Flower.Petals == 0)
+        {
+            Console.WriteLine("Девочка больше не имеет желаний.");
+        }
+        else
+        {
+            Console.WriteLine($"Девочка хочет: {wishes[0]}");
+            wishes[0] = null;
+        }
+    }
+}
+
+class Boy
+{
+    public void HandleEvent(object sender, EventArgs e)
+    {
+        if (Flower.Petals == 0)
+        {
+            Console.WriteLine("Ура!!! Я здоров.");
+        }
+        else
+        {
+            Console.WriteLine("Я не могу, я болен.");
+        }
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Flower.FlowerEvent += new Girl().HandleEvent;
+        Flower.FlowerEvent += new Boy().HandleEvent;
+
+        while (Flower.Petals > 0)
+        {
+            Flower.GenerateEvent();
+            Console.WriteLine($"Событие: {(Flower.Petals > 0 ? "Event1" : "Event2")}");
+            Thread.Sleep(1000);  // Задержка для наглядности
+        }
+    }
+}
